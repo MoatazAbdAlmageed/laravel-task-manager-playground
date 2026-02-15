@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Task extends Model
+{
+    /** @use HasFactory<\Database\Factories\TaskFactory> */
+    use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'description',
+        'is_completed',
+        'user_id',
+    ];
+
+    protected $casts = [
+        'is_completed' => 'boolean',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getExcerptAttribute()
+    {
+        return (string) str($this->description)->limit(20);
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->is_completed;
+    }
+}
