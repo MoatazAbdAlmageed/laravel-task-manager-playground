@@ -12,11 +12,19 @@ class TaskController extends Controller
 {
     use AuthorizesRequests;
 
+    /**
+     * Display a listing of the authenticated user's tasks.
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task>
+     */
     public function index()
     {
         return auth()->user()->tasks()->latest()->get();
     }
 
+    /**
+     * Store a newly created task in storage.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
