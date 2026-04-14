@@ -2,28 +2,29 @@
 
 use App\Models\User;
 use App\Models\Task;
+use Livewire\Volt\Volt;
 
 test('tasks page is displayed', function () {
     $user = User::factory()->create();
 
-    $response = $this
-        ->actingAs($user)
-        ->get('/tasks');
-
-    $response->assertOk();
+    $this->actingAs($user)
+        ->get('/tasks')
+        ->assertOk()
+        ->assertSeeLivewire('task-dashboard');
 });
 
 test('task can be created', function () {
     $user = User::factory()->create();
 
-    $response = $this
-        ->actingAs($user)
-        ->post('/tasks', [
-            'title' => 'New Task',
-            'description' => 'Test Description',
-        ]);
+    $this->actingAs($user);
 
-    $response->assertRedirect('/tasks');
+    Volt::test('task-dashboard')
+        ->set('title', 'New Task')
+        ->set('description', 'Test Description')
+        ->call('addTask')
+        ->assertSet('title', '')
+        ->assertSet('description', '');
+
     $this->assertDatabaseHas('tasks', [
         'title' => 'New Task',
         'user_id' => $user->id,
@@ -34,11 +35,11 @@ test('task can be completed', function () {
     $user = User::factory()->create();
     $task = Task::factory()->create(['user_id' => $user->id, 'is_completed' => false]);
 
-    $response = $this
-        ->actingAs($user)
-        ->patch("/tasks/{$task->id}");
+    $this->actingAs($user);
 
-    $response->assertRedirect('/tasks');
+    Volt::test('task-dashboard')
+        ->call('toggleTask', $task->id);
+
     $this->assertTrue($task->refresh()->is_completed);
 });
 
@@ -46,11 +47,11 @@ test('task can be deleted', function () {
     $user = User::factory()->create();
     $task = Task::factory()->create(['user_id' => $user->id]);
 
-    $response = $this
-        ->actingAs($user)
-        ->delete("/tasks/{$task->id}");
+    $this->actingAs($user);
 
-    $response->assertRedirect('/tasks');
+    Volt::test('task-dashboard')
+        ->call('deleteTask', $task->id);
+
     $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
 });
 
@@ -59,9 +60,9 @@ test('user cannot access other users tasks', function () {
     $user2 = User::factory()->create();
     $task = Task::factory()->create(['user_id' => $user2->id]);
 
-    $response = $this
-        ->actingAs($user1)
-        ->delete("/tasks/{$task->id}");
+    $this->actingAs($user1);
 
-    $response->assertForbidden();
+    Volt::test('task-dashboard')
+        ->call('deleteTask', $task->id)
+        ->assertForbidden();
 });
