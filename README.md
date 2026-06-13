@@ -57,6 +57,11 @@ RabbitMQ must be installed and running on your system.
    php artisan queue:listen
    ```
 
+## Useful Links
+
+- **Admin Panel**: [https://playground.test/admin](https://playground.test/admin)
+- **API Documentation (Swagger)**: [https://playground.test/docs/api#/](https://playground.test/docs/api#/)
+
 ## Key Features
 
 - **Filament Panel**: Managed tasks at `/admin/tasks`.
