@@ -19,8 +19,8 @@ class TaskController extends Controller
     public function index()
     {
         return \Spatie\QueryBuilder\QueryBuilder::for(auth()->user()->tasks())
-            ->allowedFilters(['is_completed', 'title'])
-            ->allowedSorts(['created_at', 'title', 'is_completed'])
+            ->allowedFilters('is_completed', 'title')
+            ->allowedSorts('created_at', 'title', 'is_completed')
             ->defaultSort('-created_at')
             ->get();
     }
