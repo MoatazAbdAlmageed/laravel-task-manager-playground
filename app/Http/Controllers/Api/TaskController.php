@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Models\Task;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -14,12 +13,16 @@ class TaskController extends Controller
 
     /**
      * Display a listing of the authenticated user's tasks.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task>
      */
     public function index()
     {
-        return auth()->user()->tasks()->latest()->get();
+        return \Spatie\QueryBuilder\QueryBuilder::for(auth()->user()->tasks())
+            ->allowedFilters(['is_completed', 'title'])
+            ->allowedSorts(['created_at', 'title', 'is_completed'])
+            ->defaultSort('-created_at')
+            ->get();
     }
 
     /**
@@ -40,6 +43,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         $this->authorize('view', $task);
+
         return $task;
     }
 

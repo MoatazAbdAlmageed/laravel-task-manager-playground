@@ -77,3 +77,24 @@ test('api prevents unauthorized access', function () {
 
     $response->assertForbidden();
 });
+
+test('api can filter and sort tasks using query builder', function () {
+    $user = User::factory()->create();
+    Task::factory()->create(['user_id' => $user->id, 'title' => 'Alpha Task', 'is_completed' => false, 'created_at' => now()->subDay()]);
+    Task::factory()->create(['user_id' => $user->id, 'title' => 'Beta Task', 'is_completed' => true, 'created_at' => now()]);
+
+    Sanctum::actingAs($user);
+
+    // Test filtering
+    $response = $this->getJson('/api/tasks?filter[is_completed]=1');
+    $response->assertOk()
+        ->assertJsonCount(1)
+        ->assertJsonPath('0.title', 'Beta Task');
+
+    // Test sorting
+    $response = $this->getJson('/api/tasks?sort=title');
+    $response->assertOk()
+        ->assertJsonCount(2)
+        ->assertJsonPath('0.title', 'Alpha Task')
+        ->assertJsonPath('1.title', 'Beta Task');
+});
