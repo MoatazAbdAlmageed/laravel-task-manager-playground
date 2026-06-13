@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Family extends Model
+class Student extends Model
 {
     protected $guarded = [];
 
-    public function students()
+    public function family()
     {
-        return $this->hasMany(Student::class);
+        return $this->belongsTo(Family::class);
     }
 }

@@ -317,4 +317,10 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - IMPORTANT: Always use `search-docs` tool for version-specific Tailwind CSS documentation and updated code examples. Never rely on training data.
 - IMPORTANT: Activate `tailwindcss-development` every time you're working with a Tailwind CSS or styling-related task.
 
+=== legacy rules ===
+
+# Legacy Database
+
+- ALWAYS check `u893704554_newsys.sql` to get table structures and attributes when generating or migrating features from the old system.
+
 </laravel-boost-guidelines>

@@ -33,7 +33,7 @@ class FamilyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            \App\Filament\Resources\Families\RelationManagers\StudentsRelationManager::class,
         ];
     }
 
