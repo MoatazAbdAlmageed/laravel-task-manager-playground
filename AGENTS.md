@@ -323,4 +323,10 @@ protected function isAccessible(User $user, ?string $path = null): bool
 
 - ALWAYS check `u893704554_newsys.sql` to get table structures and attributes when generating or migrating features from the old system.
 
+=== database rules ===
+
+# Deletions
+
+- ALWAYS use soft deletes (`$table->softDeletes()`, `SoftDeletes` trait) for all models/tables in the system. Never use force delete.
+
 </laravel-boost-guidelines>
